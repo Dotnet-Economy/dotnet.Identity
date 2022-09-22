@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using dotnet.Common.Settings;
 using dotnet.Identity.Service.Entities;
+using dotnet.Identity.Service.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,6 +35,7 @@ namespace dotnet.Identity.Service
             BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
             var serviceSettings = Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
             var mongoDbSettings = Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
+            IdentityServerSettings identityServerSettings = new();
 
             services.AddDefaultIdentity<ApplicationUser>()
                     .AddRoles<AppplicationRole>()
@@ -41,6 +43,13 @@ namespace dotnet.Identity.Service
                         mongoDbSettings.ConnectionString,
                         serviceSettings.ServiceName
                     );
+
+            services.AddIdentityServer()
+                    .AddAspNetIdentity<ApplicationUser>()
+                    .AddInMemoryApiScopes(identityServerSettings.ApiScopes)
+                    .AddInMemoryClients(identityServerSettings.Clients)
+                    .AddInMemoryIdentityResources(identityServerSettings.IdentityResources)
+                    .AddDeveloperSigningCredential();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -64,6 +73,8 @@ namespace dotnet.Identity.Service
             app.UseStaticFiles();
 
             app.UseRouting();
+            //Add between useRouting() and useAuthorization()
+            app.UseIdentityServer();
 
             app.UseAuthorization();
 
