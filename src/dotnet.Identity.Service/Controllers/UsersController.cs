@@ -4,13 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using dotnet.Identity.Service.Dtos;
 using dotnet.Identity.Service.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using static IdentityServer4.IdentityServerConstants;
 
 namespace dotnet.Identity.Service.Controllers
 {
     [ApiController]
     [Route("users")]
+    //Policy for securing APIs that live on the auth's own server
+    [Authorize(Policy = LocalApi.PolicyName)]
     public class UsersController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> userManager;

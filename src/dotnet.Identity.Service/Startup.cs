@@ -35,7 +35,7 @@ namespace dotnet.Identity.Service
             BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
             var serviceSettings = Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
             var mongoDbSettings = Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
-            IdentityServerSettings identityServerSettings = new();
+            var identityServerSettings = Configuration.GetSection(nameof(IdentityServerSettings)).Get<IdentityServerSettings>();
 
             services.AddDefaultIdentity<ApplicationUser>()
                     .AddRoles<AppplicationRole>()
@@ -44,12 +44,21 @@ namespace dotnet.Identity.Service
                         serviceSettings.ServiceName
                     );
 
-            services.AddIdentityServer()
+            services.AddIdentityServer(options =>
+            {
+                options.Events.RaiseSuccessEvents = true;
+                options.Events.RaiseFailureEvents = true;
+                options.Events.RaiseErrorEvents = true;
+            })
                     .AddAspNetIdentity<ApplicationUser>()
                     .AddInMemoryApiScopes(identityServerSettings.ApiScopes)
+                    .AddInMemoryApiResources(identityServerSettings.ApiResources)
                     .AddInMemoryClients(identityServerSettings.Clients)
                     .AddInMemoryIdentityResources(identityServerSettings.IdentityResources)
                     .AddDeveloperSigningCredential();
+
+            //Adds auth in its own REST APIs
+            services.AddLocalApiAuthentication();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
