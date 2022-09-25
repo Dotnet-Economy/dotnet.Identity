@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using dotnet.Common.Settings;
 using dotnet.Identity.Service.Entities;
+using dotnet.Identity.Service.HostedServices;
 using dotnet.Identity.Service.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,9 +38,11 @@ namespace dotnet.Identity.Service
             var mongoDbSettings = Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
             var identityServerSettings = Configuration.GetSection(nameof(IdentityServerSettings)).Get<IdentityServerSettings>();
 
-            services.AddDefaultIdentity<ApplicationUser>()
-                    .AddRoles<AppplicationRole>()
-                    .AddMongoDbStores<ApplicationUser, AppplicationRole, Guid>(
+
+            services.Configure<IdentitySettings>(Configuration.GetSection(nameof(IdentitySettings)))
+                    .AddDefaultIdentity<ApplicationUser>()
+                    .AddRoles<ApplicationRole>()
+                    .AddMongoDbStores<ApplicationUser, ApplicationRole, Guid>(
                         mongoDbSettings.ConnectionString,
                         serviceSettings.ServiceName
                     );
@@ -61,6 +64,8 @@ namespace dotnet.Identity.Service
             services.AddLocalApiAuthentication();
 
             services.AddControllers();
+            //
+            services.AddHostedService<IdentitySeedHostedService>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "dotnet.Identity.Service", Version = "v1" });
