@@ -14,7 +14,7 @@ namespace dotnet.Identity.Service.Controllers
     [ApiController]
     [Route("users")]
     //Policy for securing APIs that live on the auth's own server
-    [Authorize(Policy = LocalApi.PolicyName)]
+    [Authorize(Policy = LocalApi.PolicyName, Roles = Roles.Admin)]
     public class UsersController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> userManager;
