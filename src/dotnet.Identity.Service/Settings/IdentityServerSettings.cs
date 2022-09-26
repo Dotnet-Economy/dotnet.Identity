@@ -13,7 +13,8 @@ namespace dotnet.Identity.Service.Settings
             new IdentityResource[] {
                 new IdentityResources.OpenId(),
                 // Adds ability to request user info(email, name, age, birthdate, e.t.c.) in tokens
-                new IdentityResources.Profile()
+                new IdentityResources.Profile(),
+                new IdentityResource("roles",new[]{"role"})
             };
     }
 }
