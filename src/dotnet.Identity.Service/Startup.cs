@@ -23,6 +23,8 @@ namespace dotnet.Identity.Service
 {
     public class Startup
     {
+        private const string AllowedOriginSettings = "AllowedOrigin";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -80,6 +82,13 @@ namespace dotnet.Identity.Service
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "dotnet.Identity.Service v1"));
+
+                app.UseCors(builder =>
+                {
+                    builder.WithOrigins(Configuration[AllowedOriginSettings])
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                });
             }
 
             app.UseHttpsRedirection();
