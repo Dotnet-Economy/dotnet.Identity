@@ -7,12 +7,16 @@
 
   <ItemGroup>
     <PackageReference Include="aspnetcore.identity.mongodbcore" Version="3.1.2" />
-    <PackageReference Include="dotnet.Common" Version="1.0.3" />
+    <PackageReference Include="dotnet.Common" Version="1.0.5" />
     <PackageReference Include="IdentityServer4" Version="4.1.2" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.15" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\dotnet.Identity.Contracts\dotnet.Identity.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

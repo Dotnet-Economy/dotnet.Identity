@@ -2,10 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using dotnet.Common.MassTransit;
 using dotnet.Common.Settings;
 using dotnet.Identity.Service.Entities;
+using dotnet.Identity.Service.Exceptions;
 using dotnet.Identity.Service.HostedServices;
 using dotnet.Identity.Service.Settings;
+using GreenPipes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -48,6 +51,13 @@ namespace dotnet.Identity.Service
                         mongoDbSettings.ConnectionString,
                         serviceSettings.ServiceName
                     );
+
+            services.AddMassTransitWithRabbitMq(retryConfigurator =>
+            {
+                retryConfigurator.Interval(3, TimeSpan.FromSeconds(5));
+                retryConfigurator.Ignore(typeof(UnknownUserException));
+                retryConfigurator.Ignore(typeof(InsufficientFundsException));
+            });
 
             services.AddIdentityServer(options =>
             {
