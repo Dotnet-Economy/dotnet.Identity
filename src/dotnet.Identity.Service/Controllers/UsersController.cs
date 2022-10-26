@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using dotnet.Identity.Contracts;
 using dotnet.Identity.Service.Dtos;
 using dotnet.Identity.Service.Entities;
+using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,10 +20,12 @@ namespace dotnet.Identity.Service.Controllers
     public class UsersController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IPublishEndpoint publishEndpoint;// { get; set; }
 
-        public UsersController(UserManager<ApplicationUser> userManager)
+        public UsersController(UserManager<ApplicationUser> userManager, IPublishEndpoint publishEndpoint)
         {
             this.userManager = userManager;
+            this.publishEndpoint = publishEndpoint;
         }
 
         [HttpGet]
@@ -53,6 +57,7 @@ namespace dotnet.Identity.Service.Controllers
             user.Okubo = updateUserDto.Okubo;
 
             await userManager.UpdateAsync(user);
+            await publishEndpoint.Publish(new UserUpdated(user.Id, user.Email, user.Okubo));
             return NoContent();
         }
 
@@ -63,6 +68,7 @@ namespace dotnet.Identity.Service.Controllers
             if (user == null) return NotFound();
 
             await userManager.DeleteAsync(user);
+            await publishEndpoint.Publish(new UserUpdated(user.Id, user.Email, 0));
             return NoContent();
         }
 

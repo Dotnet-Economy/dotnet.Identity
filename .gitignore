@@ -3,7 +3,6 @@
 *.user
 *.sln.docstates
 *.jwk
-dotnet.Identity.Contracts/
 
 # Build results
 [Dd]ebug/

@@ -22,13 +22,24 @@ namespace dotnet.Identity.Service.Consumers
             var user = await userManager.FindByIdAsync(message.UserId.ToString());
             //User no exist
             if (user == null) throw new UnknownUserException(message.UserId);
+            if (user.MessageIds.Contains(context.MessageId.Value))
+            {
+                await context.Publish(new OkuboDonComot(message.CorrelationId));
+                return;
+            }
 
             user.Okubo -= message.Okubo;
             //Okubo no dey
             if (user.Okubo < 0) throw new InsufficientFundsException(message.UserId, message.Okubo);
 
+            user.MessageIds.Add(context.MessageId.Value);
+
             await userManager.UpdateAsync(user);
-            await context.Publish(new OkuboDonComot(message.CorrelationId));
+
+            var okuboDonComotTask = context.Publish(new OkuboDonComot(message.CorrelationId));
+            var userUpdatedTask = context.Publish(new UserUpdated(user.Id, user.Email, user.Okubo));
+
+            await Task.WhenAll(userUpdatedTask, okuboDonComotTask);
         }
 
     }
