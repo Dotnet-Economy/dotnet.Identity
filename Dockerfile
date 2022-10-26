@@ -13,6 +13,9 @@ FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 COPY ["src/dotnet.Identity.Contracts/dotnet.Identity.Contracts.csproj", "src/dotnet.Identity.Contracts/"]
 COPY ["src/dotnet.Identity.Service/dotnet.Identity.Service.csproj", "src/dotnet.Identity.Service/"]
 
+RUN --mount=type=secret, id=GH_OWNER,dst=/GH_OWNER --mount=type=secret, id=GH_PAT,dst=/GH_PAT \
+    dotnet nuget add source --username USERNAME --password `cat /GH_PAT` --store-password-in-clear-text --name github "https://nuget.pkg.github.com/`cat /GH_OWNER`/index.json"
+
 RUN dotnet restore "src/dotnet.Identity.Service/dotnet.Identity.Service.csproj"
 COPY ./src ./src
 WORKDIR "/src/dotnet.Identity.Service"
