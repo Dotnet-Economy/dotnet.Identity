@@ -1,0 +1,16 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP .NET Core service.
+
+version: '3.4'
+
+services:
+  dotnetidentityservice:
+    image: dotnetidentityservice
+    build:
+      context: .
+      dockerfile: src/dotnet.Identity.Service/Dockerfile
+    ports:
+      - 5004:5004
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw

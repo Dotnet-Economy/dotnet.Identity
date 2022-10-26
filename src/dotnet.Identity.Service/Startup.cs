@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using dotnet.Common.MassTransit;
 using dotnet.Common.Settings;
 using dotnet.Identity.Service.Entities;
@@ -11,12 +8,9 @@ using dotnet.Identity.Service.Settings;
 using GreenPipes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
@@ -110,6 +104,8 @@ namespace dotnet.Identity.Service
             app.UseIdentityServer();
 
             app.UseAuthorization();
+            //Requirement to get access tokens over http when running microservice in Docker container
+            app.UseCookiePolicy(new CookiePolicyOptions { MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.Lax });
 
             app.UseEndpoints(endpoints =>
             {
