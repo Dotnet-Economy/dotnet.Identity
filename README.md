@@ -5,7 +5,7 @@ Dotnet Economy Identity microservice
 ## Create and publish package
 
 ```powershell
-$version="1.0.3"
+$version="1.0.4"
 $owner="Dotnet-Economy"
 $gh_pat="[PAT HERE]"
 
@@ -26,6 +26,7 @@ docker build --secret id=GH_OWNER --secret id=GH_PAT -t dotnet.identity:$version
 
 ```powershell
 $adminPass="[PASSWORD HERE]"
-$cosmosDbConnString="[CONN STRRING HERE]"
-docker run -it --rm -p 5004:5004 --name identity -e MongoDbSettings__ConnectionString=$cosmosDbConnString -e RabbitMQSettings__Host=rabbitmq -e IdentitySettings__AdminUserPassword=$adminPass --network dotnetinfra_default dotnet.identity:$version
+$cosmosDbConnString="[CONN STRING HERE]"
+$serviceBusConnString="[CONN STRING HERE]"
+docker run -it --rm -p 5004:5004 --name identity -e MongoDbSettings__ConnectionString=$cosmosDbConnString -e ServiceBusSettings__ConnectionString=$serviceBusConnString -e ServiceSettings__MessageBroker="SERVICEBUS" -e IdentitySettings__AdminUserPassword=$adminPass dotnet.identity:$version
 ```

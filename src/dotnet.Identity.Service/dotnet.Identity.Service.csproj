@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="aspnetcore.identity.mongodbcore" Version="3.1.2" />
-    <PackageReference Include="dotnet.Common" Version="1.0.7" />
+    <PackageReference Include="dotnet.Common" Version="1.0.8" />
     <PackageReference Include="IdentityServer4" Version="4.1.2" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.15" />

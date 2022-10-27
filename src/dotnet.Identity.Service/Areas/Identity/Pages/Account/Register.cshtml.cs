@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using dotnet.Identity.Contracts;
 using dotnet.Identity.Service.Entities;
 using dotnet.Identity.Service.Settings;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -27,19 +29,22 @@ namespace dotnet.Identity.Service.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly IdentitySettings identitySettings;
+        private readonly IPublishEndpoint publishEndpoint;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            IOptions<IdentitySettings> identityOptions)
+            IOptions<IdentitySettings> identityOptions,
+            IPublishEndpoint publishEndpoint)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
             identitySettings = identityOptions.Value;
+            this.publishEndpoint = publishEndpoint;
         }
 
         [BindProperty]
@@ -87,6 +92,7 @@ namespace dotnet.Identity.Service.Areas.Identity.Pages.Account
                     _logger.LogInformation("User created a new account with password.");
 
                     await _userManager.AddToRoleAsync(user, Roles.Player);
+                    await publishEndpoint.Publish(new UserUpdated(user.Id, user.Email, user.Okubo));
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
