@@ -14,10 +14,12 @@ spec:
     spec:
       containers:
       - name: identity
-        image: dotneteconomy.azurecr.io/dotnet.identity:1.0.6
+        image: dotneteconomy.azurecr.io/dotnet.identity:1.0.7
         env:
           - name: ServiceSettings__MessageBroker
             value: SERVICEBUS
+          - name: ServiceSettings__KeyVaultName
+            value: dotneteconomy
         resources:
           limits:
             memory: "128Mi"

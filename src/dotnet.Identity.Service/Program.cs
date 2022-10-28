@@ -1,5 +1,6 @@
 using System;
 using Azure.Identity;
+using dotnet.Common.Configurations;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -15,16 +16,7 @@ namespace dotnet.Identity.Service
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((context, configurationBuilder) =>
-                {
-                    if (context.HostingEnvironment.IsProduction())
-                    {
-                        configurationBuilder.AddAzureKeyVault(
-                            new Uri("https://dotneteconomy.vault.azure.net/"),
-                            new DefaultAzureCredential()
-                        );
-                    }
-                })
+                .ConfigureAzureKeyVault()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
