@@ -1,4 +1,5 @@
 using System;
+using dotnet.Common.HealthChecks;
 using dotnet.Common.MassTransit;
 using dotnet.Common.Settings;
 using dotnet.Identity.Service.Entities;
@@ -82,17 +83,7 @@ namespace dotnet.Identity.Service
             });
 
             services.AddHealthChecks()
-                    .Add(new HealthCheckRegistration(
-                        "mongodb",
-                        serviceProvider =>
-                        {
-                            var mongoClient = new MongoClient(mongoDbSettings.ConnectionString);
-                            return new MongoDbHealthCheck(mongoClient);
-                        },
-                        HealthStatus.Unhealthy,
-                        new[] { "ready" },
-                        TimeSpan.FromSeconds(3)
-                    ));
+                    .AddMongoDb();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -128,14 +119,7 @@ namespace dotnet.Identity.Service
             {
                 endpoints.MapControllers();
                 endpoints.MapRazorPages();
-                endpoints.MapHealthChecks("/health/ready", new HealthCheckOptions()
-                {
-                    Predicate = (check) => check.Tags.Contains("ready")
-                });
-                endpoints.MapHealthChecks("/health/live", new HealthCheckOptions()
-                {
-                    Predicate = (check) => false
-                });
+                endpoints.MapDotnetEconomyHealthChecks();
             });
         }
 
