@@ -59,3 +59,19 @@ kubectl create secret generic identity-secrets --from-literal=cosmosdb-connectio
 ```powershell
 kubectl apply -f ./Kubernetes/identity.yaml -n $namespace
 ```
+
+## Creating the Kubernetes pod
+
+```powershell
+az identity create -g $appname -n $namespace
+$IDENTITY_RESOURCE_ID=az identity show -g $appname -n $namespace --query id -otsv
+
+az aks pod-identity add -g $appname --cluster-name $appname --namespace $namespace -n $namespace --identity-resource-id $IDENTITY_RESOURCE_ID
+```
+
+## Granting acess to Key Vault secrets
+
+```powershell
+$IDENTITY_CLIENT_ID=az identity show -g $appname -n $namespace --query clientId -otsv
+az keyvault set-policy -n $appname --secret-permissions get list --spn $IDENTITY_CLIENT_ID
+```
