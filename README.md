@@ -41,15 +41,21 @@ docker tag dotnet.identity:$version "$appname.azurecr.io/dotnet.identity:$versio
 docker push "$appname.azurecr.io/dotnet.identity:$version"
 ```
 
-## Create the Kubernetes namespace
+## Creating the Kubernetes namespace
 
 ```powershell
 $namespace="identity"
 kubectl create namespace $namespace
 ```
 
-## Create the Kubernetes secrets
+## Creating the Kubernetes secrets
 
 ```powershell
 kubectl create secret generic identity-secrets --from-literal=cosmosdb-connectionstring=$cosmosDbConnString --from-literal=servicebus-connectionstring=$serviceBusConnString --from-literal=admin-password=$adminPass -n $namespace
+```
+
+## Creating the Kubernetes pod
+
+```powershell
+kubectl apply -f ./Kubernetes/identity.yaml -n $namespace
 ```
