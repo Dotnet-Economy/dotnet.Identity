@@ -40,3 +40,16 @@ az acr login --name $appname
 docker tag dotnet.identity:$version "$appname.azurecr.io/dotnet.identity:$version"
 docker push "$appname.azurecr.io/dotnet.identity:$version"
 ```
+
+## Create the Kubernetes namespace
+
+```powershell
+$namespace="identity"
+kubectl create namespace $namespace
+```
+
+## Create the Kubernetes secrets
+
+```powershell
+kubectl create secret generic identity-secrets --from-literal=cosmosdb-connectionstring=$cosmosDbConnString --from-literal=servicebus-connectionstring=$serviceBusConnString --from-literal=admin-password=$adminPass -n $namespace
+```
