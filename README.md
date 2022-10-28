@@ -5,7 +5,7 @@ Dotnet Economy Identity microservice
 ## Create and publish package
 
 ```powershell
-$version="1.0.4"
+$version="1.0.5"
 $owner="Dotnet-Economy"
 $gh_pat="[PAT HERE]"
 

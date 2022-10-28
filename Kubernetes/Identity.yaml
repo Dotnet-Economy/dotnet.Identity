@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: identity
-        image: dotneteconomy.azurecr.io/dotnet.identity:1.0.4
+        image: dotneteconomy.azurecr.io/dotnet.identity:1.0.5
         env:
           - name: ServiceSettings__MessageBroker
             value: "SERVICEBUS"
@@ -38,6 +38,16 @@ spec:
             cpu: "150m"
         ports:
         - containerPort: 5004
+        livenessProbe:
+          httpGet:
+            port: 5004
+            path: /health/live
+          initialDelaySeconds: 10
+        readinessProbe:
+          httpGet:
+            port: 5004
+            path: /health/ready
+          initialDelaySeconds: 10
 
 ---
 apiVersion: v1
