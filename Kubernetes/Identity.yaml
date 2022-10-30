@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: identity
-        image: dotneteconomy.azurecr.io/dotnet.identity:1.0.8
+        image: dotneteconomy.azurecr.io/dotnet.identity:1.0.10
         env:
           - name: ServiceSettings__MessageBroker
             value: SERVICEBUS

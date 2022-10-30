@@ -80,11 +80,20 @@ namespace dotnet.Identity.Service
 
             services.AddHealthChecks()
                     .AddMongoDb();
+
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto;
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseForwardedHeaders();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
