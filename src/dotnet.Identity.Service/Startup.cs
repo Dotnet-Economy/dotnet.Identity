@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography.X509Certificates;
 using dotnet.Common.HealthChecks;
 using dotnet.Common.MassTransit;
 using dotnet.Common.Settings;
@@ -22,10 +23,11 @@ namespace dotnet.Identity.Service
     public class Startup
     {
         private const string AllowedOriginSettings = "AllowedOrigin";
-
-        public Startup(IConfiguration configuration)
+        private readonly IHostEnvironment environment;
+        public Startup(IConfiguration configuration, IHostEnvironment environment)
         {
             Configuration = configuration;
+            this.environment = environment;
         }
 
         public IConfiguration Configuration { get; }
@@ -54,18 +56,7 @@ namespace dotnet.Identity.Service
                 retryConfigurator.Ignore(typeof(InsufficientFundsException));
             });
 
-            services.AddIdentityServer(options =>
-            {
-                options.Events.RaiseSuccessEvents = true;
-                options.Events.RaiseFailureEvents = true;
-                options.Events.RaiseErrorEvents = true;
-            })
-                    .AddAspNetIdentity<ApplicationUser>()
-                    .AddInMemoryApiScopes(identityServerSettings.ApiScopes)
-                    .AddInMemoryApiResources(identityServerSettings.ApiResources)
-                    .AddInMemoryClients(identityServerSettings.Clients)
-                    .AddInMemoryIdentityResources(identityServerSettings.IdentityResources)
-                    .AddDeveloperSigningCredential();
+            AddIdentityServer(services);
 
             //Adds auth in its own REST APIs
             services.AddLocalApiAuthentication();
@@ -88,6 +79,7 @@ namespace dotnet.Identity.Service
                 options.KnownProxies.Clear();
             });
         }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -133,6 +125,34 @@ namespace dotnet.Identity.Service
                 endpoints.MapRazorPages();
                 endpoints.MapDotnetEconomyHealthChecks();
             });
+        }
+
+        private void AddIdentityServer(IServiceCollection services)
+        {
+            var identityServerSettings = Configuration.GetSection(nameof(IdentityServerSettings)).Get<IdentityServerSettings>();
+
+            var builder = services.AddIdentityServer(options =>
+            {
+                options.Events.RaiseSuccessEvents = true;
+                options.Events.RaiseFailureEvents = true;
+                options.Events.RaiseErrorEvents = true;
+            })
+                                .AddAspNetIdentity<ApplicationUser>()
+                                .AddInMemoryApiScopes(identityServerSettings.ApiScopes)
+                                .AddInMemoryApiResources(identityServerSettings.ApiResources)
+                                .AddInMemoryClients(identityServerSettings.Clients)
+                                .AddInMemoryIdentityResources(identityServerSettings.IdentityResources);
+
+            if (environment.IsDevelopment())
+            {
+                builder.AddDeveloperSigningCredential();
+            }
+            else
+            {
+                var identitySettings = Configuration.GetSection(nameof(IdentitySettings)).Get<IdentitySettings>();
+                var cert = X509Certificate2.CreateFromPemFile(identitySettings.CertificateCerFilePath, identitySettings.CertificateKeyFilePath);
+                builder.AddSigningCredential(cert);
+            }
         }
 
     }

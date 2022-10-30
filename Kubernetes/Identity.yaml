@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: identity
-        image: dotneteconomy.azurecr.io/dotnet.identity:1.0.10
+        image: dotneteconomy.azurecr.io/dotnet.identity:1.0.11
         env:
           - name: ServiceSettings__MessageBroker
             value: SERVICEBUS
@@ -45,15 +45,15 @@ spec:
         volumeMounts:
           - name: certificate-volume
             mountPath: /certificates 
-    volumes:
-      - name: certificate-volume
-        secret:
-          secretName: signing-cert
-          items:
-            - key: tls.key
-              path: certificate.key
-            - key: tls.crt
-              path: tls.crt
+      volumes:
+        - name: certificate-volume
+          secret:
+            secretName: signing-cert
+            items:
+              - key: tls.key
+                path: certificate.key
+              - key: tls.crt
+                path: certificate.crt
 ---
 apiVersion: v1
 kind: Service
