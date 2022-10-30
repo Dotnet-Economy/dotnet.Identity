@@ -22,6 +22,10 @@ spec:
             value: dotneteconomy
           - name: IdentitySettings__PathBase
             value: /identity-svc
+          - name: IdentitySettings__CertificateCerFilePath
+            value: "/certificates/certificate.crt"
+          - name: IdentitySettings__CertificateKeyFilePath
+            value: "/certificates/certificate.key"
         resources:
           limits:
             memory: "128Mi"
@@ -38,7 +42,18 @@ spec:
             port: 5004
             path: /health/ready
           initialDelaySeconds: 10
-
+        volumeMounts:
+          - name: certificate-volume
+            mountPath: /certificates 
+    volumes:
+      - name: certificate-volume
+        secret:
+          secretName: signing-cert
+          items:
+            - key: tls.key
+              path: certificate.key
+            - key: tls.crt
+              path: tls.crt
 ---
 apiVersion: v1
 kind: Service
