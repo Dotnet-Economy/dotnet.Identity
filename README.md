@@ -5,7 +5,7 @@ Dotnet Economy Identity microservice
 ## Create and publish package
 
 ```powershell
-$version="1.0.7"
+$version="1.0.8"
 $owner="Dotnet-Economy"
 $gh_pat="[PAT HERE]"
 
@@ -37,7 +37,7 @@ docker run -it --rm -p 5004:5004 --name identity -e MongoDbSettings__ConnectionS
 
 ```powershell
 az acr login --name $appname
-docker tag dotnet.identity:$version "$appname.azurecr.io/dotnet.identity:$version"
+# docker tag dotnet.identity:$version "$appname.azurecr.io/dotnet.identity:$version"
 docker push "$appname.azurecr.io/dotnet.identity:$version"
 ```
 

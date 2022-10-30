@@ -5,5 +5,6 @@ namespace dotnet.Identity.Service.Settings
         public string AdminUserEmail { get; init; }
         public string AdminUserPassword { get; init; }
         public decimal StartingOkubo { get; init; }
+        public string PathBase { get; set; }
     }
 }
