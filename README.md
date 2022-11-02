@@ -95,3 +95,7 @@ helm registry login "$appname.azurecr.io" --username  $helmUser --password $helm
 $chartVersion="0.1.0"
 helm upgrade identity-service oci://$appname.azurecr.io/helm/microservice --version $chartVersion -f ./helm/values.yaml -n $namespace --install #--debug
 ```
+
+## Required organisation secrets for Github workflow
+
+GH_PAT: Created in GitHub user profile --> Settings --> Developer settings --> Personal access token
