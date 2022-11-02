@@ -81,3 +81,9 @@ az keyvault set-policy -n $appname --secret-permissions get list --spn $IDENTITY
 ```powershell
 kubectl apply -f ./Kubernetes/signing-cer.yaml -n $namespace
 ```
+
+## Installing the Helm chart
+
+```powershell
+helm install identity-service ./helm -f ./helm/values.yaml -n $namespace
+```
