@@ -99,3 +99,6 @@ helm upgrade identity-service oci://$appname.azurecr.io/helm/microservice --vers
 ## Required organisation secrets for Github workflow
 
 GH_PAT: Created in GitHub user profile --> Settings --> Developer settings --> Personal access token
+AZURE_TENANT_ID: From AAD properties page
+AZURE_SUBSCRIPTION_ID: From Azure Portal Subscription
+AZURE_CLIENT_ID: From AAD App registration
