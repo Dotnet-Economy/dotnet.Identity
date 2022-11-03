@@ -58,9 +58,23 @@ jobs:
     
     env:
       APP_NAME: dotneteconomy
+      
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
     - uses: actions/checkout@v3
+    
+    - name: Azure Login
+      uses: Azure/login@v1.4.6
+      with:
+        # ClientId of the Azure Service principal created.
+        client-id: ${{secrets.AZURE_CLIENT_ID}}
+        # TenantId of the Azure Service principal created.
+        tenant-id: ${{secrets.AZURE_TENANT_ID}}
+        # Azure subscriptionId
+        subscription-id: ${{secrets.AZURE_SUBSCRIPTION_ID}}
     
     - name: Build and push Docker image
       uses: docker/build-push-action@v3.2.0
@@ -69,3 +83,4 @@ jobs:
           "GH_OWNER=${{github.repository_owner}}"
           "GH_PAT=${{secrets.GH_PAT}}"
         tags: ${{env.APP_NAME}}.azurecr.io/dotnet.identity:${{ needs.generate-version.outputs.new_version }}
+
