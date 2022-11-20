@@ -3,6 +3,7 @@ using System.Security.Cryptography.X509Certificates;
 using dotnet.Common.HealthChecks;
 using dotnet.Common.Logging;
 using dotnet.Common.MassTransit;
+using dotnet.Common.OpenTelemetry;
 using dotnet.Common.Settings;
 using dotnet.Identity.Service.Entities;
 using dotnet.Identity.Service.Exceptions;
@@ -80,7 +81,8 @@ namespace dotnet.Identity.Service
                 options.KnownProxies.Clear();
             });
 
-            services.AddSeqLogging(Configuration);
+            services.AddSeqLogging(Configuration)
+                    .AddTracing(Configuration);
 
         }
 
