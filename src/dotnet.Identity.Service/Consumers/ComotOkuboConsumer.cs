@@ -24,7 +24,7 @@ namespace dotnet.Identity.Service.Consumers
             var user = await userManager.FindByIdAsync(message.UserId.ToString());
             
             logger.LogInformation(
-                "Comot {Amount} Okubo from User:{UserId}. CorrelationId:{CorrelationId}",
+                "Comot {Okubo} Okubo from User:{UserId}. CorrelationId:{CorrelationId}",
                 message.Okubo,
                 message.UserId,
                 context.Message.CorrelationId
