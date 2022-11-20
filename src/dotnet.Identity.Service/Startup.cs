@@ -8,7 +8,7 @@ using dotnet.Identity.Service.Entities;
 using dotnet.Identity.Service.Exceptions;
 using dotnet.Identity.Service.HostedServices;
 using dotnet.Identity.Service.Settings;
-using GreenPipes;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
