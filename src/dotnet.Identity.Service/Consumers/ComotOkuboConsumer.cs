@@ -12,9 +12,10 @@ namespace dotnet.Identity.Service.Consumers
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ILogger<ComotOkubo> logger;
-        public ComotOkuboConsumer(UserManager<ApplicationUser> userManager)
+        public ComotOkuboConsumer(UserManager<ApplicationUser> userManager, ILogger<ComotOkubo> logger)
         {
             this.userManager = userManager;
+            this.logger = logger;
         }
 
         public async Task Consume(ConsumeContext<ComotOkubo> context)
@@ -24,7 +25,7 @@ namespace dotnet.Identity.Service.Consumers
             var user = await userManager.FindByIdAsync(message.UserId.ToString());
             
             logger.LogInformation(
-                "Comot {Okubo} Okubo from User:{UserId}. CorrelationId:{CorrelationId}",
+                "Comot {Amount} Okubo from User:{UserId}. CorrelationId:{CorrelationId}",
                 message.Okubo,
                 message.UserId,
                 context.Message.CorrelationId
