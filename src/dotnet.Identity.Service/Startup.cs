@@ -1,6 +1,7 @@
 using System;
 using System.Security.Cryptography.X509Certificates;
 using dotnet.Common.HealthChecks;
+using dotnet.Common.Logging;
 using dotnet.Common.MassTransit;
 using dotnet.Common.Settings;
 using dotnet.Identity.Service.Entities;
@@ -78,6 +79,9 @@ namespace dotnet.Identity.Service
                 options.KnownNetworks.Clear();
                 options.KnownProxies.Clear();
             });
+
+            services.AddSeqLogging(Configuration);
+
         }
 
 

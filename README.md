@@ -1,3 +1,5 @@
+[![Identity CICD](https://github.com/Dotnet-Economy/dotnet.Identity/actions/workflows/cicd.yml/badge.svg)](https://github.com/Dotnet-Economy/dotnet.Identity/actions/workflows/cicd.yml)
+
 # dotnet.Identity
 
 Dotnet Economy Identity microservice
