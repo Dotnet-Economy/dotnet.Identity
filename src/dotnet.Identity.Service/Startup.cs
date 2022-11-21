@@ -82,7 +82,8 @@ namespace dotnet.Identity.Service
             });
 
             services.AddSeqLogging(Configuration)
-                    .AddTracing(Configuration);
+                    .AddTracing(Configuration)
+                    .AddMetrics(Configuration);
 
         }
 
@@ -106,6 +107,7 @@ namespace dotnet.Identity.Service
                 });
             }
 
+            app.UseOpenTelemetryPrometheusScrapingEndpoint();
             app.UseHttpsRedirection();
 
             app.Use((context, next) =>
