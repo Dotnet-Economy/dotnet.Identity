@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
 EXPOSE 5004
 
@@ -9,7 +9,7 @@ ENV ASPNETCORE_URLS=http://+:5004
 RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
 USER appuser
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0-focal AS build
 COPY ["src/dotnet.Identity.Contracts/dotnet.Identity.Contracts.csproj", "src/dotnet.Identity.Contracts/"]
 COPY ["src/dotnet.Identity.Service/dotnet.Identity.Service.csproj", "src/dotnet.Identity.Service/"]
 
