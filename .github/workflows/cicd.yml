@@ -57,7 +57,7 @@ jobs:
     needs: generate-version
     
     env:
-      APP_NAME: dotneteconomy
+      APP_NAME: okuboground
       SERVICE_NAME: identity
       HELM_CHART_VERSION: 0.1.5
       

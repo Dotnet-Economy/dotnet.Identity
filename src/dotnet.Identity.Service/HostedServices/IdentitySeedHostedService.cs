@@ -2,7 +2,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using dotnet.Identity.Service.Entities;
 using dotnet.Identity.Service.Settings;
-using MassTransit.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

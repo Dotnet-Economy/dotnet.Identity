@@ -21,7 +21,7 @@ dotnet nuget push ../packages/dotnet.Identity.Contracts.$version.nupkg --api-key
 ```powershell
 $env:GH_OWNER="Dotnet-Economy"
 $env:GH_PAT="[PAT HERE]"
-$appname="dotneteconomy"
+$appname="okuboground"
 
 docker build --secret id=GH_OWNER --secret id=GH_PAT -t "$appname.azurecr.io/dotnet.identity:$version" .
 ```
@@ -94,7 +94,7 @@ $env:HELM_EXPERIMENTAL_OCI=1
 
 helm registry login "$appname.azurecr.io" --username  $helmUser --password $helmPassword
 
-$chartVersion="0.1.0"
+$chartVersion="0.1.10"
 helm upgrade identity-service oci://$appname.azurecr.io/helm/microservice --version $chartVersion -f ./helm/values.yaml -n $namespace --install #--debug
 ```
 
